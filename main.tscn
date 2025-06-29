@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3 uid="uid://2rhlnekngi0d"]
+
+[ext_resource type="Script" uid="uid://dxmr3hl7wwt3j" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://c0thalg11m3r5" path="res://hex_world.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://baywmi2oo8ikk" path="res://camera_3d.tscn" id="3_h2yge"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_h2yge"]
+energy_multiplier = 2.0
+
+[sub_resource type="Sky" id="Sky_1bvp3"]
+sky_material = SubResource("ProceduralSkyMaterial_h2yge")
+
+[sub_resource type="Environment" id="Environment_h2yge"]
+background_mode = 2
+background_color = Color(0.878431, 1, 1, 1)
+sky = SubResource("Sky_1bvp3")
+ambient_light_source = 3
+
+[sub_resource type="LabelSettings" id="LabelSettings_h2yge"]
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bvp3"]
+font_size = 32
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_ig7tw")
+
+[node name="HexWorld" parent="." instance=ExtResource("2_h2yge")]
+
+[node name="Camera3D" parent="." instance=ExtResource("3_h2yge")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 1600, 0)
+far = 8000.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.707107, 0.353553, -0.612372, 0, 0.866025, 0.5, 0.707107, 0.353553, -0.612372, -32, 32, -32)
+shadow_enabled = true
+directional_shadow_max_distance = 8000.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_h2yge")
+
+[node name="FPS_Counter" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS: 60"
+label_settings = SubResource("LabelSettings_h2yge")
+
+[node name="Debug_Label" type="Label" parent="."]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 55.0
+grow_vertical = 0
+text = "DEBUG"
+label_settings = SubResource("LabelSettings_1bvp3")

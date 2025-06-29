@@ -1,0 +1,106 @@
+[gd_scene load_steps=5 format=3 uid="uid://c41g0h0qeo483"]
+
+[sub_resource type="GDScript" id="GDScript_bwinv"]
+script/source = "extends Control
+
+var _WIDTH = 2560
+var _HEIGHT = 1440
+
+var _SCALE = 4
+
+var world: WorldGen
+var image: Image
+
+var generating: bool = false
+var finished_image: Image = null
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	_regenerate_map()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta: float) -> void:
+	if finished_image != null:
+		$TextureRect.texture = ImageTexture.create_from_image(image)
+		$Label.text = \"Done\"
+		finished_image = null
+		generating = false
+
+func _generate_map_section(y: int):
+	for x in range(0, _WIDTH):
+		var sample_value = world.sample_point((x - _WIDTH/2) * _SCALE, (y - _HEIGHT/2) * _SCALE)
+		var sample_colour = world.color_hex(sample_value)
+		image.set_pixel(x, y, sample_colour)
+
+func _regenerate_map():
+	world = WorldGen.new()
+	image = Image.create_empty(_WIDTH, _HEIGHT, false, Image.Format.FORMAT_RGB8)
+	
+	var group_task_id = WorkerThreadPool.add_group_task(_generate_map_section, _HEIGHT)
+	
+	WorkerThreadPool.wait_for_group_task_completion(group_task_id)
+	
+	finished_image = image
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"reload_map\") and not generating:
+		$Label.text = \"Generating..\"
+		generating = true
+		WorkerThreadPool.add_task(_regenerate_map.bind())
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_bwinv"]
+font_size = 32
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bwinv"]
+frequency = 0.001
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_iegm7"]
+noise = SubResource("FastNoiseLite_bwinv")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_bwinv")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 640.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -206.0
+offset_top = -61.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Generating.."
+label_settings = SubResource("LabelSettings_bwinv")
+horizontal_alignment = 2
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_iegm7")

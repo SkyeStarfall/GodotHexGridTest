@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://b4mxwdlwej21a"]
+
+[ext_resource type="ArrayMesh" uid="uid://2qvoki3sijlb" path="res://meshes/hex.res" id="1_2crfn"]
+[ext_resource type="Script" uid="uid://bvuhbegib8tbk" path="res://hex_tile.gd" id="1_pmlg5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pmlg5"]
+resource_local_to_scene = true
+albedo_color = Color(1, 0.501961, 1, 1)
+
+[node name="HexTile" type="Node3D"]
+script = ExtResource("1_pmlg5")
+
+[node name="TileMesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_2crfn")
+surface_material_override/0 = SubResource("StandardMaterial3D_pmlg5")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.251, 0)
+visible = false
+text = "X: 0 - Y: 0"

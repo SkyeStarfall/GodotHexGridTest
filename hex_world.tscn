@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0thalg11m3r5"]
+
+[ext_resource type="Script" uid="uid://ceiaapk2d8l2l" path="res://hex_world.gd" id="1_cxxuc"]
+
+[node name="HexWorld" type="Node3D"]
+script = ExtResource("1_cxxuc")

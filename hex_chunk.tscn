@@ -1,0 +1,17 @@
+[gd_scene load_steps=5 format=3 uid="uid://bxn8gcuc5pqex"]
+
+[ext_resource type="Script" uid="uid://bdur3qxtuaxsh" path="res://hex_chunk.gd" id="1_xg66l"]
+[ext_resource type="Shader" uid="uid://c02xk3psw1yhx" path="res://hex_chunk.gdshader" id="2_ij30u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_00uoi"]
+render_priority = 0
+shader = ExtResource("2_ij30u")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_xg66l"]
+
+[node name="HexChunk" type="Node3D"]
+script = ExtResource("1_xg66l")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("ShaderMaterial_00uoi")
+mesh = SubResource("ArrayMesh_xg66l")
